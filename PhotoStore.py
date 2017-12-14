@@ -13,27 +13,34 @@ import json
 import re
 
 class PhotoStore:
-    
+
     def __init__(self):
-        try:
-            with open('./config.json', 'r') as f:
-                self.__config = json.load(f)
-        except Exception:
-            print 'ERROR : no config file.'
-            exit()
+        # try:
+        with open('./config.json', 'r') as f:
+            self.__config = json.load(f) 
+        self.__input_dir = self.__config['path']['input_dir']
+        self.__output_dir = self.__config['path']['output_dir']
+        self.__filter_in = self.__config['dir']['filter_in']
+        self.__filter_out = self.__config['file_type']['filter_out']
+        if len(self.__filter_in) > 0:
+            self.__filter_in_regexp = '||'.join(self.__filter_in)
+        if len(self.__filter_out) > 0:
+            self.__filter_out_regexp = '||'.join(self.__filter_out)
+        # except Exception:
+        #     print 'ERROR : no config file.'
+        #     exit()
         
     def list_dir(self):
-        input_dir = self.__config['path']['input_dir']
-        input_dir_list = os.listdir(self.__config['path']['input_dir'])        
-        filter_in = self.__config['dir']['filter_in']
+        input_dir_list = os.listdir(self.__input_dir)  
+        print 'Get all directories from', self.__input_dir
+        print 'All:', input_dir_list
         res = []
-        if len(filter_in) > 0:
+        if len(self.__filter_in) > 0:
             # it gets only directories matching filter_in regex list
-            filter_in = '||'.join(filter_in)
             for x in input_dir_list:
                 try:
-                    f = os.path.join(input_dir, x)
-                    if os.path.isdir(f) and re.search(filter_in, x):
+                    f = os.path.join(self.__input_dir, x)
+                    if os.path.isdir(f) and re.search(self.__filter_in_regexp, x.lower()):
                         res.append(f)
                 except:
                     pass
@@ -41,14 +48,48 @@ class PhotoStore:
             # if filter_in is empty, it gets all directory
             for x in input_dir_list:
                 try:
-                    f = os.path.join(input_dir, x)
-                    print f, os.path.isdir(f)
+                    f = os.path.join(self.__input_dir, x)
                     if os.path.isdir(f):
                         res.append(f)
                 except:
                     pass
-        
+        print 'Filtered:', res
         return res
 
+    def walk_in_directory(self, current_input_path = None, d = None, current_output_path = None):
+        if current_input_path is None and current_output_path is None:
+            current_input_path = self.__input_dir
+            current_output_path = self.__output_dir
+
+        current_input_path = os.path.join(current_input_path, d)
+        current_output_path = os.path.join(current_output_path, os.path.basename(d))
+        
+        if os.path.isdir(current_input_path):
+            print 'walk into directory: ', current_input_path
+            self.mkdir(current_output_path)            
+            file_list = os.listdir(current_input_path)
+
+            print 'Found', len(file_list), 'directories & files.', file_list                        
+            for f in file_list:
+                self.walk_in_directory(current_input_path, f, current_output_path)
+        else:
+            if len(self.__filter_out) == 0 or not re.search(self.__filter_out_regexp, d.lower()):
+                self.copy_file(current_input_path, current_output_path)
+
+    def mkdir(self, outdir):
+        print 'Create directory:', outdir
+
+    def copy_file(self, infile, outfile):
+        print 'Copy file from', infile, 'to', outfile
+
+    def start(self):
+        self.__directories = self.list_dir()
+        print 'list of all directories:', self.__directories, '\n'
+        for d in self.__directories:
+            print '#### Start walking into directory: ', d, '####'
+            self.mkdir(self.__output_dir)          
+            self.walk_in_directory(d = d)
+            print '\n'
+
 photoStore = PhotoStore()
-print photoStore.list_dir()
+photoStore.start()

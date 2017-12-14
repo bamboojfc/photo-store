@@ -1,9 +1,9 @@
 {
     "file_type": {
-        "filter_out" : ["ARW"]
+        "filter_out" : [".*.arw"]
     },
     "path": {
-        "input_dir" : "E:\\picture",
+        "input_dir" : "E:\\test",
         "output_dir" : "C:\\picture\\filtered"
     },
     "dir": {
