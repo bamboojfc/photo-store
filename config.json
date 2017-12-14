@@ -1,0 +1,12 @@
+{
+    "file_type": {
+        "filter_out" : ["ARW"]
+    },
+    "path": {
+        "input_dir" : "E:\\picture",
+        "output_dir" : "C:\\picture\\filtered"
+    },
+    "dir": {
+        "filter_in" : ["sony_.*"]
+    }
+}
