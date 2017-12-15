@@ -1,10 +1,10 @@
 {
     "file_type": {
-        "filter_out" : [".*.arw"]
+        "filter_out" : [".*arw", ".*moff"]
     },
     "path": {
-        "input_dir" : "E:\\test",
-        "output_dir" : "C:\\picture\\filtered",
+        "input_dir" : "E:\\picture",
+        "output_dir" : "C:\\picture\\filtered2",
         "log_file" : "log.txt"
     },
     "dir": {

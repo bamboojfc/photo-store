@@ -43,9 +43,9 @@ class PhotoStore:
         self.__filter_in = self.__config['dir']['filter_in']
         self.__filter_out = self.__config['file_type']['filter_out']
         if len(self.__filter_in) > 0:
-            self.__filter_in_regexp = '||'.join(self.__filter_in)
+            self.__filter_in_regexp = '|'.join(self.__filter_in)
         if len(self.__filter_out) > 0:
-            self.__filter_out_regexp = '||'.join(self.__filter_out)
+            self.__filter_out_regexp = '|'.join(self.__filter_out)
         self.__log = Log()
         # except Exception:
         #     self.__log.write('ERROR : no config file.')
@@ -54,7 +54,7 @@ class PhotoStore:
     def list_dir(self):
         input_dir_list = os.listdir(self.__input_dir)  
         self.__log.write('Get all directories from ' + str(self.__input_dir))
-        self.__log.write('All: ' + str(', '.join(input_dir_list)))
+        #self.__log.write('All: ' + str(', '.join(input_dir_list)))
         
         res = []
         if len(self.__filter_in) > 0:
