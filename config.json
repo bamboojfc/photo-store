@@ -4,7 +4,8 @@
     },
     "path": {
         "input_dir" : "E:\\test",
-        "output_dir" : "C:\\picture\\filtered"
+        "output_dir" : "C:\\picture\\filtered",
+        "log_file" : "log.txt"
     },
     "dir": {
         "filter_in" : ["sony_.*"]
