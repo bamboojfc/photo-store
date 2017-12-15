@@ -78,6 +78,10 @@ class PhotoStore:
 
     def mkdir(self, outdir):
         print 'Create directory:', outdir
+        if not os.path.exists(outdir):
+            os.makedirs(outdir)
+        else:
+            print 'FAILED:', outdir, 'has been already created.'
 
     def copy_file(self, infile, outfile):
         print 'Copy file from', infile, 'to', outfile
